@@ -16,7 +16,7 @@ You are an assistant that receives a list of ingredients that a user has and sug
 // API keys private.
 
 const ANTHROPIC_API_KEY =
-  "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";
+  "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";
 
 const anthropic = new Anthropic({
   // Make sure you set an environment variable in Scrimba
