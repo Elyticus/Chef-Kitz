@@ -1,34 +1,28 @@
 import Anthropic from "@anthropic-ai/sdk";
 
 const SYSTEM_PROMPT = `
-You are an assistant that receives a list of ingredients that a user has and suggests a recipe they could make with some or all of those ingredients. You don't need to use every ingredient they mention in your recipe. The recipe can include additional ingredients they didn't mention, but try not to include too many extra ingredients. Format your response in markdown to make it easier to render to a web page
+You are an assistant that receives a list of ingredients that a user has and suggests a recipe they could make with some or all of those ingredients. You don't need to use every ingredient they mention in your recipe. The recipe can include additional ingredients they didn't mention, but try not to include too many extra ingredients. Format your response in markdown to make it easier to render to a web page.
 `;
 
-// 🚨👉 ALERT: Read message below! You've been warned! 👈🚨
-// If you're following along on your local machine instead of
-// here on Scrimba, make sure you don't commit your API keys
-// to any repositories and don't deploy your project anywhere
-// live online. Otherwise, anyone could inspect your source
-// and find your API keys/tokens. If you want to deploy
-// this project, you'll need to create a backend of some kind,
-// either your own or using some serverless architecture where
-// your API calls can be made. Doing so will keep your
-// API keys private.
+const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY;
 
-const ANTHROPIC_API_KEY =
-  "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";
+if (!apiKey) {
+  throw new Error("Missing VITE_ANTHROPIC_API_KEY in environment variables.");
+}
 
 const anthropic = new Anthropic({
-  // Make sure you set an environment variable in Scrimba
-  // for ANTHROPIC_API_KEY
-  apiKey: ANTHROPIC_API_KEY,
+  apiKey,
   dangerouslyAllowBrowser: true,
 });
 
 export async function getRecipeFromChefClaude(ingredientsArr) {
+  if (!Array.isArray(ingredientsArr)) {
+    throw new Error("ingredientsArr must be an array of strings");
+  }
+
   const ingredientsString = ingredientsArr.join(", ");
 
-  const msg = await anthropic.messages.create({
+  const response = await anthropic.messages.create({
     model: "claude-3-haiku-20240307",
     max_tokens: 1024,
     system: SYSTEM_PROMPT,
@@ -39,5 +33,6 @@ export async function getRecipeFromChefClaude(ingredientsArr) {
       },
     ],
   });
-  return msg.content[0].text;
+
+  return response?.content?.[0]?.text || "No recipe response received.";
 }
