@@ -1,4 +1,4 @@
-import chefMouseImage from "/images/mouse chef image.png";
+import chefMouseImage from "/images/mouse-chef-image.png";
 
 export default function Header() {
   return (
