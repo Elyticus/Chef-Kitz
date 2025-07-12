@@ -1,6 +1,6 @@
 export default function IngredientsList(props) {
-  const ingredientsListItems = props.ingredients.map((item) => (
-    <li key={item}>{item}</li>
+  const ingredientsListItems = props.ingredients.map((item, index) => (
+    <li key={`${item}-${index}`}>{item}</li>
   ));
 
   return (
@@ -9,6 +9,7 @@ export default function IngredientsList(props) {
       <ul className="ingredients-list" aria-live="polite">
         {ingredientsListItems}
       </ul>
+
       {props.ingredients.length > 3 && (
         <div className="get-recipe-container">
           <div>
